@@ -15,7 +15,7 @@ from io import BytesIO
 import matplotlib.pyplot as plt
 
 
-product = pd.read_csv("/Users/sean/Documents/project data/PRODUCT_SMALLER.csv")
+product = pd.read_csv("./data/PRODUCT_SMALLER.csv")
 
 # combine all the useful context into a new column called combined
 product["combined"] = product[['description', 'extdescription', 'department', 'prodgroup', 'category', 'colour']].agg(lambda x: ','.join(x.values.astype(str)), axis=1)
