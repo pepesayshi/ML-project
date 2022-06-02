@@ -13,9 +13,26 @@ from PIL import Image
 import requests
 from io import BytesIO
 import matplotlib.pyplot as plt
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import StandardScaler
+
 
 
 product = pd.read_csv("./data/PRODUCT_SMALLER.csv")
+
+#
+# sc = StandardScaler()
+# X_train = sc.fit_transform(product)
+#
+# print(X_train)
+# exit()
+#
+# pca = PCA(n_components=2)
+# pca.fit(product)
+# product = pca.transform(product)
+# print(pca.explained_variance_ratio_)
+
+# exit()
 
 # combine all the useful context into a new column called combined
 product["combined"] = product[['description', 'extdescription', 'department', 'prodgroup', 'category', 'colour']].agg(lambda x: ','.join(x.values.astype(str)), axis=1)
@@ -148,7 +165,9 @@ def recommend(title, colour = None):
     sig = list(enumerate(sg[idx]))  # Sort the books
     sig = sorted(sig, key=lambda x: x[1], reverse=True)  # Scores of the 5 most similar books
     sig = sig[1:6]  # Book indicies
+    print(sig)
     movie_indices = [i[0] for i in sig]
+    movie_scores = [i[1] for i in sig]
 
     # Top 5 book recommendation
     rec = data[['description', 'url']].iloc[movie_indices]
@@ -157,7 +176,7 @@ def recommend(title, colour = None):
 
     count = 1;
     for i in rec['description']:
-        print('Recommended Top 5 products are: Number ' + str(count) + ' - ' + i)
+        print('Recommended Top 5 products are: Number ' + str(count) + ' - Score is: ' + str(movie_scores[count-1]) + ' - ' + i)
         count = count + 1;
 
     image = product.loc[product['description'] == title]['url'].iloc[0]
@@ -174,8 +193,10 @@ def recommend(title, colour = None):
         print(plt.imshow(img))
         plt.show()
 
-# recommend("Twist Reversible Knit Dress", "BLACK")
+recommend("Twist Reversible Knit Dress", "BLACK")
 # recommend("Oversized Button Front Blazer", "BLACK")
 # recommend("Ribbed Halter Knit Top", "WHITE")
 # recommend("Pearl Ribbed Ring 3 Pack", "GOLD")
-recommend("High Waist Faux Leather Short", "BLACK")
+# recommend("High Waist Faux Leather Short", "BLACK")
+# recommend("Long Sleeve Mesh Top", "BLACK")
+
